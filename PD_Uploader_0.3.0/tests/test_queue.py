@@ -245,11 +245,11 @@ class FileTests(unittest.TestCase):
         self.assertNotIn('private-bearer',sanitize('Authorization: Bearer private-bearer'))
         self.assertNotIn('private-json',sanitize('{"token": "private-json"}'))
         self.assertNotIn('private',sanitize(r'C:\private\image.jpg'))
-        with TemporaryDirectory() as d:
-            log=Diagnostics(Path(d));self.addCleanup(log.close)
-            e=QueueEngine(None);e.add(job());log.checkpoint(e.snapshot())
-            content=(Path(d)/'last-result.json').read_text()
-            self.assertNotIn('example.invalid',content);self.assertNotIn('page_url',content)
+        d=self.enterContext(TemporaryDirectory())
+        log=Diagnostics(Path(d));self.addCleanup(log.close)
+        e=QueueEngine(None);e.add(job());log.checkpoint(e.snapshot())
+        content=(Path(d)/'last-result.json').read_text()
+        self.assertNotIn('example.invalid',content);self.assertNotIn('page_url',content)
 
 class ConfirmationTests(unittest.TestCase):
     def test_only_success_text_counts_as_success(self):
