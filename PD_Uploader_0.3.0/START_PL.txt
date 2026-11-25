@@ -1,0 +1,48 @@
+PD UPLOADER 0.3.0 — JAK URUCHOMIĆ
+
+To jest nowa, osobna wersja kodu. Paczka 0.2.0 pozostaje Twoją wersją zapasową.
+Ten ZIP nie zawiera gotowego Windows EXE. GitHub Actions zbuduje go po wgraniu kodu.
+
+WGRANIE DO GITHUB
+
+1. Rozpakuj ZIP na swoim komputerze.
+2. W repozytorium utwórz nową gałąź o nazwie uploader-0.3.0. Dzięki temu kod na głównej gałęzi zostaje bez zmian.
+3. Wgraj zawartość rozpakowanego katalogu do głównego katalogu tej nowej gałęzi. Zachowaj strukturę src, tests i .github/workflows oraz pliki znajdujące się obok nich. Nie wgrywaj wyłącznie ZIP-a ani dodatkowego katalogu nadrzędnego.
+   Katalog .github jest ukryty na macOS: Command+Shift+. pokazuje ukryte pliki w Finderze. Plik .github/workflows/build-windows-release.yml też musi zostać zaktualizowany.
+4. Po zapisaniu zmian otwórz Actions → Build PD Uploader 0.3.0 (Windows).
+   Budowanie powinno rozpocząć się po zapisaniu gałęzi. Jeśli nie, użyj Run workflow i wybierz uploader-0.3.0.
+5. Po zielonym wyniku pobierz artefakt PDUploader-0.3.0-windows.
+6. Rozpakuj go do osobnego lokalnego folderu na Windows. Uruchom PDUploader-0.3.0.exe. Zachowaj wszystkie pliki i katalog _internal obok programu. Nie przenoś samego EXE.
+
+Jeśli wolisz budować na Windows: potrzebujesz Python 3.11, internetu do pobrania bibliotek i Microsoft Edge. Uruchom BUILD-WINDOWS.cmd. Gotowa aplikacja będzie w dist/PDUploader-0.3.0.
+
+CO DODANO
+
+- Każdy CSV ma własną zakładkę, wybór wierszy i osobne okno/sesję Edge.
+- Pliki są przetwarzane po kolei. Oglądanie innej zakładki nie zmienia miejsca wysyłania.
+- Pause zatrzymuje przed kolejnym wierszem. Rozpoczęta wysyłka czeka na potwierdzenie serwera.
+- Wolna odpowiedź nie uruchamia następnego wiersza ani ponownego kliknięcia Upload.
+- Resume pomija potwierdzone wiersze. Skip i Cancel zachowują wyniki.
+- Postęp liczy potwierdzone zdjęcia, bez zmniejszania liczby wybranych zdjęć po błędach lub pominięciu.
+- Brak lub błąd zdjęcia zatrzymuje dany wiersz przed wysłaniem; pozostałe bezpieczne wiersze mogą być kontynuowane.
+- Nowy wygląd jest zgodny z uzgodnionym układem dwóch paneli. Szczegóły są w rozwijanym Activity log.
+
+PIERWSZE SPRAWDZENIE W PRACY
+
+Zacznij od jednego dozwolonego wiersza testowego, a nie od całej kolejki.
+Sprawdź właściwą tablicę, komunikat po wysłaniu i zapis zdjęć.
+Następnie sprawdź dwa różne CSV, Pause/Resume i dłuższe oczekiwanie na serwer.
+
+Jeżeli pojawi się Outcome unknown: program nie rozpoznał pewnego potwierdzenia, serwer zgłosił błąd albo okno zamknięto przed odpowiedzią. Nie wysyła tego wiersza automatycznie drugi raz. Review upload result pozwala zaznaczyć sukces tylko po Twoim sprawdzeniu na tablicy, że wszystkie zdjęcia z tego wiersza zostały zapisane. Jeśli nie masz pewności, wybierz No.
+
+Jeśli zwykły komunikat sukcesu nie zostanie rozpoznany, potrzebna będzie jego dokładna treść do dopasowania rozpoznawania. Nie zmieniaj na ślepo kolejki ani nie ponawiaj niepewnego wyniku.
+
+CO SPRAWDZONO, A CO JESZCZE NIE
+
+Przeszły 54 lokalne testy automatyczne, w tym oczekiwanie ponad minutę, pauza, wznowienie, brak podwójnej wysyłki i oddzielne zadania. Uruchomiono i obejrzano układ aplikacji na macOS.
+
+Nie wykonano tutaj kompilacji Windows, testu rzeczywistego serwera, firmowego logowania ani pracy zminimalizowanego Edge. Testy automatyczne używają symulowanych sytuacji; nie zastępują pierwszej próby w pracy. Automatyczna minimalizacja i View Edge nie są włączone.
+
+Program startuje z pustą kolejką. Nie odtwarza jej i nie wznawia wysyłania automatycznie po awarii lub ponownym uruchomieniu. Lokalnie zapisuje ograniczone podsumowanie wyników, ale wynik bez potwierdzenia nadal wymaga sprawdzenia na stronie.
+
+Nie dodawaj do GitHub firmowego CSV, prawdziwych adresów, zdjęć, haseł ani logów.
