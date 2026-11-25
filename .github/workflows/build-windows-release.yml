@@ -1,0 +1,45 @@
+name: Build PD Uploader 0.3.0 (Windows)
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: PD_Uploader_0.3.0
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install -e .
+
+      - name: Run tests
+        run: python -m unittest discover -s tests
+
+      - name: Build folder app
+        run: pyinstaller --noconfirm control_room_uploader.spec
+
+      - name: Zip folder app
+        shell: pwsh
+        run: Compress-Archive -Path 'dist/PDUploader-0.3.0' -DestinationPath 'dist/PDUploader-0.3.0-windows.zip' -Force
+
+      - name: Upload GitHub Actions artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDUploader-0.3.0-windows
+          path: PD_Uploader_0.3.0/dist/PDUploader-0.3.0
